@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1>Список пользователей</h1>
     <div v-if="!isTableShow">
       Загрузка данных...
     </div>
@@ -9,6 +10,7 @@
 
 <script>
 import UsersList from '@/components/UsersList.vue'
+import axios from 'axios'
 
 export default {
   name: 'Users',
@@ -23,6 +25,22 @@ export default {
   computed: {
     isTableShow: function() {
       return this.list.length > 0
+    }
+  },
+  created: function() {
+    this.loadUsersData()
+  },
+  methods: {
+    loadUsersData() {
+      axios
+        .get('http://localhost:3004/users')
+        .then(response => response.data)
+        .then(users => {
+          this.list = users
+        })
+        .catch(error => {
+          console.error(error)
+        })
     }
   }
 }
